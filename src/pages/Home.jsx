@@ -41,8 +41,8 @@ export default function Home() {
   );
 
   return (
-    <main className='md:ml-52 max-w-7xl px-4 py-8 transition-all duration-300'>
-      <div className='flex justify-between items-center my-8'>
+    <>
+      <div className='flex items-center justify-between mb-8'>
         <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
         <ViewToggle isGridView={isGridView} setIsGridView={setIsGridView} />
       </div>
@@ -54,6 +54,6 @@ export default function Home() {
           onDeleteItem={handleDeleteItem}
         />
       </section>
-    </main>
+    </>
   );
 }
