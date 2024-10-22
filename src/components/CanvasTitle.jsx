@@ -16,7 +16,7 @@ export default function CanvasTitle() {
     setIsEditing(false);
   };
   return (
-    <div className='flex items-center justify-center'>
+    <div className='flex items-center justify-center mb-2'>
       {isEditing ? (
         <div className='flex items-center'>
           <label htmlFor='cavas-title' className='sr-only'>
