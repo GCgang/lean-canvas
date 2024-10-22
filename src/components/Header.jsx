@@ -46,8 +46,8 @@ export default function Header() {
       </div>
 
       <aside
-        className={`fixed left-0 top-12 h-full w-52 z-50 bg-gray-800 p-4 transition-transform duration-300 transform ${
-          sideBarOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed left-0 top-12 h-full  opacity-90 z-50 bg-gray-800 p-4 transition-transform duration-300 transform ${
+          sideBarOpen ? 'w-full translate-x-0' : 'w-52 -translate-x-full'
         } md:translate-x-0`}
       >
         <nav>
