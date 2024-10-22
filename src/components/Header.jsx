@@ -20,14 +20,14 @@ export default function Header() {
     setIsDark((prev) => !prev);
   };
   return (
-    <header className='fixed top-0 left-0 w-full z-50 bg-gray-800 text-white px-4'>
-      <div className='flex justify-between h-12 items-center'>
+    <header className='fixed top-0 left-0 z-50 w-full px-4 text-white bg-gray-800'>
+      <div className='flex items-center justify-between h-12'>
         <div className='md:hidden '>
-          <button onClick={toggleSlidebar}>
+          <button onClick={toggleSlidebar} aria-label='Open Sidebar'>
             {sideBarOpen ? (
-              <IoMdClose className='h-6 w-6' />
+              <IoMdClose className='w-6 h-6' />
             ) : (
-              <FaBars className='h-6 w-6' />
+              <FaBars className='w-6 h-6' />
             )}
           </button>
         </div>
@@ -35,11 +35,11 @@ export default function Header() {
           <Link to='/'>Lean Canvas</Link>
         </h2>
         <div>
-          <button onClick={handleDark}>
+          <button onClick={handleDark} aria-label='Change DarkMode'>
             {isDark ? (
-              <IoMdMoon className='h-6 w-6' />
+              <IoMdMoon className='w-6 h-6' />
             ) : (
-              <IoMdSunny className='h-6 w-6' />
+              <IoMdSunny className='w-6 h-6' />
             )}
           </button>
         </div>
