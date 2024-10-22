@@ -8,7 +8,7 @@ export default function ViewToggle({ isGridView, setIsGridView }) {
     <div className='space-x-2'>
       <button
         onClick={() => handleClick(true)}
-        className={`bg-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2  focus:ring-blue-500 ${
+        className={`rounded-lg p-2 focus:outline-none focus:ring-2  focus:ring-blue-500 ${
           isGridView ? 'bg-blue-500 text-white' : 'bg-gray-200'
         }`}
         aria-label='Grid View'
@@ -17,7 +17,7 @@ export default function ViewToggle({ isGridView, setIsGridView }) {
       </button>
       <button
         onClick={() => handleClick(false)}
-        className={`bg-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2  focus:ring-blue-500 ${
+        className={`rounded-lg p-2 focus:outline-none focus:ring-2  focus:ring-blue-500 ${
           !isGridView ? 'bg-blue-500 text-white' : 'bg-gray-200'
         }`}
         aria-label='List View'
