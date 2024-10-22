@@ -20,7 +20,7 @@ export default function Header() {
     setIsDark((prev) => !prev);
   };
   return (
-    <header className='bg-gray-800 text-white px-4'>
+    <header className='fixed top-0 left-0 w-full z-50 bg-gray-800 text-white px-4'>
       <div className='flex justify-between h-12 items-center'>
         <div className='md:hidden '>
           <button onClick={toggleSlidebar}>
@@ -46,7 +46,7 @@ export default function Header() {
       </div>
 
       <aside
-        className={`fixed left-0 top-12 h-full w-52 bg-gray-800 p-4 transition-transform duration-300 transform ${
+        className={`fixed left-0 top-12 h-full w-52 z-50 bg-gray-800 p-4 transition-transform duration-300 transform ${
           sideBarOpen ? 'translate-x-0' : '-translate-x-full'
         } md:translate-x-0`}
       >
@@ -54,7 +54,13 @@ export default function Header() {
           <ul className='space-y-2'>
             {navItems.map(({ id, to, label }) => (
               <li key={id}>
-                <NavLink to={to}> {label}</NavLink>
+                <NavLink
+                  to={to}
+                  onClick={toggleSlidebar}
+                  className='block p-2 rounded-xl hover:bg-gray-700 hover:text-blue-400'
+                >
+                  {label}
+                </NavLink>
               </li>
             ))}
           </ul>
