@@ -11,10 +11,13 @@ export default function Header() {
     { id: 'about', label: 'about', icon: <FaInfoCircle />, to: '/' },
     { id: 'contact', label: 'contact', icon: <FaEnvelope />, to: '/' },
   ];
-  const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [sideBarOpen, setSideBarOpen] = useState(false);
   const [isDark, setIsDark] = useState(true);
   const toggleSlidebar = () => {
     setSideBarOpen((prev) => !prev);
+  };
+  const closeSideBar = () => {
+    setSideBarOpen(false);
   };
   const handleDark = () => {
     setIsDark((prev) => !prev);
@@ -56,7 +59,7 @@ export default function Header() {
               <li key={id}>
                 <NavLink
                   to={to}
-                  onClick={toggleSlidebar}
+                  onClick={closeSideBar}
                   className='block p-2 rounded-xl hover:bg-gray-700 hover:text-blue-400'
                 >
                   {label}
