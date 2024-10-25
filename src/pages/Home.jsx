@@ -3,7 +3,7 @@ import CanvasList from '../components/CanvasList';
 import SearchBar from '../components/SearchBar';
 import ViewToggle from '../components/ViewToggle';
 import { useEffect } from 'react';
-import { createCanvas, getCanvases } from '../api/cavas';
+import { createCanvas, deleteCanvas, getCanvases } from '../api/cavas';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import AddCanvasButton from '../components/AddCanvasButton';
@@ -47,8 +47,16 @@ export default function Home() {
     fetchData({ title_like: searchInput });
   }, [searchInput]);
 
-  const handleDeleteItem = (id) => {
-    setData(data.filter((item) => item.id !== id));
+  const handleDeleteItem = async (id) => {
+    if (confirm('삭제 하시겠습니까 ?') === false) {
+      return;
+    }
+    try {
+      await deleteCanvas(id);
+      fetchData({ title_like: searchInput });
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const handleRetry = () => {

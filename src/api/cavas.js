@@ -14,3 +14,7 @@ export function createCanvas() {
   };
   return canvasHttpClient.post('/', newCanvas);
 }
+
+export async function deleteCanvas(id) {
+  await canvasHttpClient.delete(`/${id}`);
+}
