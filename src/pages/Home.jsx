@@ -3,9 +3,10 @@ import CanvasList from '../components/CanvasList';
 import SearchBar from '../components/SearchBar';
 import ViewToggle from '../components/ViewToggle';
 import { useEffect } from 'react';
-import { getCanvases } from '../api/cavas';
+import { createCanvas, getCanvases } from '../api/cavas';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
+import AddCanvasButton from '../components/AddCanvasButton';
 
 export default function Home() {
   const [searchInput, setSearchInput] = useState('');
@@ -18,7 +19,7 @@ export default function Home() {
     try {
       setIsLoading(true);
       setIsError(null);
-      await new Promise((resolver) => setTimeout(resolver, 2000));
+      await new Promise((resolver) => setTimeout(resolver, 1000));
       const response = await getCanvases(params);
       setData(response.data);
     } catch (error) {
@@ -27,6 +28,20 @@ export default function Home() {
       setIsLoading(false);
     }
   }
+
+  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
+  const handleCreateCanvas = async () => {
+    try {
+      setIsLoadingCreate(true);
+      await new Promise((resolver) => setTimeout(resolver, 1000));
+      await createCanvas();
+      fetchData({ title_like: searchInput });
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsLoadingCreate(false);
+    }
+  };
 
   useEffect(() => {
     fetchData({ title_like: searchInput });
@@ -45,6 +60,12 @@ export default function Home() {
       <div className='flex items-center justify-between mb-8'>
         <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
         <ViewToggle isGridView={isGridView} setIsGridView={setIsGridView} />
+      </div>
+      <div className='flex justify-end mb-4'>
+        <AddCanvasButton
+          isLoadingCreate={isLoadingCreate}
+          onCreateCanvas={handleCreateCanvas}
+        />
       </div>
       {isLoading && <Loading />}
       {isError && <Error message={isError.message} onRetry={handleRetry} />}
