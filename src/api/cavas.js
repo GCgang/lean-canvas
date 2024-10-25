@@ -27,3 +27,7 @@ export async function getCanvasById(id) {
 export async function updateTitle(id, title) {
   await canvasHttpClient.patch(`/${id}`, { title });
 }
+
+export async function updateCanvas(id, canvas) {
+  await canvasHttpClient.put(`/${id}`, canvas);
+}

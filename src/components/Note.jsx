@@ -5,6 +5,7 @@ export default function Note({
   id,
   content,
   color: initalColor,
+  onUpdateNote,
   onRemoveNote,
 }) {
   const colorOptions = [
@@ -28,14 +29,16 @@ export default function Note({
     e.stopPropagation();
     setIsEditing(false);
   };
-  const handleRemoveNote = () => {
+  const handleRemoveNote = (e) => {
+    e.stopPropagation();
     onRemoveNote(id);
   };
   const handleChangeContent = (e) => {
-    setContent(e.target.value);
+    onUpdateNote(id, e.target.value, color);
   };
-  const handleChangeColor = (option) => {
-    setColor(option);
+  const handleChangeColor = (newColor) => {
+    setColor(newColor);
+    onUpdateNote(id, content, newColor);
   };
   const textareaRef = useRef(null);
   useEffect(() => {

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import CanvasTitle from '../components/CanvasTitle';
 import LeanCanvas from '../components/LeanCanvas';
 import { useState, useEffect } from 'react';
-import { getCanvasById, updateTitle } from '../api/cavas';
+import { getCanvasById, updateCanvas, updateTitle } from '../api/cavas';
 
 export default function CanvasDetail() {
   const { id } = useParams();
@@ -23,10 +23,21 @@ export default function CanvasDetail() {
       alert(error.message);
     }
   };
+
+  const handleCanvasChange = async (updatedCanvas) => {
+    try {
+      await updateCanvas(id, updatedCanvas);
+      setCanvas(updatedCanvas);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
   return (
     <>
       <CanvasTitle value={canvas?.title} onChange={handleTitleChange} />
-      {canvas && <LeanCanvas canvas={canvas} />}
+      {canvas && (
+        <LeanCanvas canvas={canvas} onCanvasChange={handleCanvasChange} />
+      )}
     </>
   );
 }
