@@ -26,7 +26,7 @@ export default function CanvasDetail() {
   return (
     <>
       <CanvasTitle value={canvas?.title} onChange={handleTitleChange} />
-      <LeanCanvas />
+      {canvas && <LeanCanvas canvas={canvas} />}
     </>
   );
 }
