@@ -18,3 +18,12 @@ export function createCanvas() {
 export async function deleteCanvas(id) {
   await canvasHttpClient.delete(`/${id}`);
 }
+
+export async function getCanvasById(id) {
+  const { data } = await canvasHttpClient.get(`/${id}`);
+  return data;
+}
+
+export async function updateTitle(id, title) {
+  await canvasHttpClient.patch(`/${id}`, { title });
+}
