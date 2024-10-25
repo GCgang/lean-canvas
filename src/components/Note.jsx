@@ -8,6 +8,7 @@ export default function Note({
   onUpdateNote,
   onRemoveNote,
 }) {
+  const [localContent, setLocalContent] = useState(content);
   const colorOptions = [
     'bg-yellow-300',
     'bg-pink-300',
@@ -33,8 +34,8 @@ export default function Note({
     e.stopPropagation();
     onRemoveNote(id);
   };
-  const handleChangeContent = (e) => {
-    onUpdateNote(id, e.target.value, color);
+  const handleChangeContent = () => {
+    onUpdateNote(id, localContent, color);
   };
   const handleChangeColor = (newColor) => {
     setColor(newColor);
@@ -74,9 +75,10 @@ export default function Note({
       </div>
       <textarea
         ref={textareaRef}
-        value={content}
-        onChange={handleChangeContent}
-        className='w-full h-auto min-h-32 bg-transparent resize-none border-none outline-none text-gray-900 overflow-hidden'
+        value={localContent}
+        onChange={(e) => setLocalContent(e.target.value)}
+        onBlur={handleChangeContent}
+        className='w-full h-auto overflow-hidden text-gray-900 bg-transparent border-none outline-none resize-none min-h-32'
         aria-label='Edit Note'
         placeholder='글을 작성하세요'
         readOnly={!isEditing}
