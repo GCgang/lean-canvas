@@ -2,8 +2,16 @@ import { canvasHttpClient } from './http';
 import { v4 as uuidv4 } from 'uuid';
 import dayjs from 'dayjs';
 
-export function getCanvases(params) {
-  return canvasHttpClient.get('/', { params });
+export async function getCanvases(params) {
+  const payload = Object.assign(
+    {
+      _sort: 'lastModified',
+      _order: 'desc',
+    },
+    params
+  );
+  const { data } = await canvasHttpClient.get('/', { params: payload });
+  return data;
 }
 
 export function createCanvas() {

@@ -1,9 +1,19 @@
+import { useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 
-export default function SearchBar({ searchInput, setSearchInput }) {
+export default function SearchBar({ searchText = '', onSearch }) {
+  const [localSearchText, setLocalSearchText] = useState(searchText);
+
   const handleChange = (e) => {
-    setSearchInput(e.target.value);
+    setLocalSearchText(e.target.value);
   };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      onSearch(localSearchText);
+    }
+  };
+
   return (
     <div className='relative'>
       <label htmlFor='search-input' className='sr-only'>
@@ -14,8 +24,9 @@ export default function SearchBar({ searchInput, setSearchInput }) {
         type='search'
         id='search-input'
         placeholder='검색'
-        value={searchInput}
+        value={searchText}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         className='w-full pl-8 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'
       />
     </div>

@@ -2,7 +2,7 @@ import CanvasItem from './CanvasItem';
 
 export default function CanvasList({
   filteredData,
-  searchInput,
+  searchText,
   isGridView,
   onDeleteItem,
 }) {
@@ -10,7 +10,7 @@ export default function CanvasList({
     return (
       <div className='text-center py-8'>
         <p className='text-xl text-gray-600'>
-          {searchInput ? '검색 결과가 없습니다' : '목록이 없습니다'}
+          {searchText ? '검색 결과가 없습니다' : '목록이 없습니다'}
         </p>
       </div>
     );

@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import CanvasTitle from '../components/CanvasTitle';
 import LeanCanvas from '../components/LeanCanvas';
 import { useState, useEffect } from 'react';
-import { getCanvasById, updateCanvas, updateTitle } from '../api/cavas';
+import { getCanvasById, updateCanvas, updateTitle } from '../api/canvas';
 
 export default function CanvasDetail() {
   const { id } = useParams();

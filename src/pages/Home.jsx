@@ -2,55 +2,69 @@ import { useState } from 'react';
 import CanvasList from '../components/CanvasList';
 import SearchBar from '../components/SearchBar';
 import ViewToggle from '../components/ViewToggle';
-import { useEffect } from 'react';
-import { createCanvas, deleteCanvas, getCanvases } from '../api/cavas';
+import { createCanvas, deleteCanvas, getCanvases } from '../api/canvas';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import AddCanvasButton from '../components/AddCanvasButton';
-import useApiRequest from '../../ hooks/useApiRequest';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import CategoryFilter from '../components/CategoryFilter';
 
 export default function Home() {
-  const [searchInput, setSearchInput] = useState('');
+  const [filter, setFilter] = useState({
+    searchText: undefined,
+    category: undefined,
+  });
+
   const [isGridView, setIsGridView] = useState(true);
 
-  const {
-    isLoading,
-    isError,
-    data,
-    execute: fetchData,
-  } = useApiRequest(getCanvases);
-  const { isLoading: isLoadingCreate, execute: createNewCanvas } =
-    useApiRequest(createCanvas);
-
-  useEffect(() => {
-    fetchData({ title_like: searchInput });
-  }, [searchInput, fetchData]);
-
-  const handleCreateCanvas = async () => {
-    createCanvas(null, {
-      onSuccess: () => {
-        fetchData({ title_like: searchInput });
-      },
-      onError: (error) => alert(error.message),
+  const handleFilter = (key, value) => {
+    setFilter({
+      ...filter,
+      [key]: value,
     });
   };
 
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ['canvases', filter.searchText, filter.category],
+    queryFn: () =>
+      getCanvases({ title_like: filter.searchText, category: filter.category }),
+    initialData: [],
+  });
+
+  const { mutate: createNewCanvas, isLoading: isLoadingCreate } = useMutation({
+    mutationFn: createCanvas,
+    onSuccess: () => queryClient.invalidateQueries(['canvases']),
+    onError: (error) => alert(error.message),
+  });
+
+  const { mutate: deleteCanvasMutation } = useMutation({
+    mutationFn: deleteCanvas,
+    onSuccess: () => queryClient.invalidateQueries(['canvases']),
+    onError: (error) => alert(error.message),
+  });
+
+  const handleCreateCanvas = async () => {
+    createNewCanvas();
+  };
+
   const handleDeleteItem = async (id) => {
-    if (confirm('삭제 하시겠습니까 ?') === false) {
-      return;
-    }
-    try {
-      await deleteCanvas(id);
-      fetchData({ title_like: searchInput });
-    } catch (error) {
-      alert(error.message);
-    }
+    deleteCanvasMutation(id);
   };
 
   return (
     <>
       <div className='flex items-center justify-between mb-8'>
-        <SearchBar searchInput={searchInput} setSearchInput={setSearchInput} />
+        <SearchBar
+          searchText={filter.searchText}
+          onSearch={(val) => handleFilter('searchText', val)}
+        />
+        <CategoryFilter
+          category={filter.category}
+          onChange={(val) => handleFilter('category', val)}
+        ></CategoryFilter>
         <ViewToggle isGridView={isGridView} setIsGridView={setIsGridView} />
       </div>
       <div className='flex justify-end mb-4'>
@@ -60,17 +74,12 @@ export default function Home() {
         />
       </div>
       {isLoading && <Loading />}
-      {isError && (
-        <Error
-          message={isError.message}
-          onRetry={() => fetchData({ title_like: searchInput })}
-        />
-      )}
+      {isError && <Error message={isError.message} onRetry={refetch} />}
       {!isLoading && !isError && (
         <section>
           <CanvasList
             filteredData={data}
-            searchInput={searchInput}
+            searchText={filter.searchText}
             isGridView={isGridView}
             onDeleteItem={handleDeleteItem}
           />
