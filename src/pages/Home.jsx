@@ -7,45 +7,33 @@ import { createCanvas, deleteCanvas, getCanvases } from '../api/cavas';
 import Loading from '../components/Loading';
 import Error from '../components/Error';
 import AddCanvasButton from '../components/AddCanvasButton';
+import useApiRequest from '../../ hooks/useApiRequest';
 
 export default function Home() {
   const [searchInput, setSearchInput] = useState('');
   const [isGridView, setIsGridView] = useState(true);
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isError, setIsError] = useState(null);
 
-  async function fetchData(params) {
-    try {
-      setIsLoading(true);
-      setIsError(null);
-      await new Promise((resolver) => setTimeout(resolver, 1000));
-      const response = await getCanvases(params);
-      setData(response.data);
-    } catch (error) {
-      setIsError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  const [isLoadingCreate, setIsLoadingCreate] = useState(false);
-  const handleCreateCanvas = async () => {
-    try {
-      setIsLoadingCreate(true);
-      await new Promise((resolver) => setTimeout(resolver, 1000));
-      await createCanvas();
-      fetchData({ title_like: searchInput });
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setIsLoadingCreate(false);
-    }
-  };
+  const {
+    isLoading,
+    isError,
+    data,
+    execute: fetchData,
+  } = useApiRequest(getCanvases);
+  const { isLoading: isLoadingCreate, execute: createNewCanvas } =
+    useApiRequest(createCanvas);
 
   useEffect(() => {
     fetchData({ title_like: searchInput });
-  }, [searchInput]);
+  }, [searchInput, fetchData]);
+
+  const handleCreateCanvas = async () => {
+    createCanvas(null, {
+      onSuccess: () => {
+        fetchData({ title_like: searchInput });
+      },
+      onError: (error) => alert(error.message),
+    });
+  };
 
   const handleDeleteItem = async (id) => {
     if (confirm('삭제 하시겠습니까 ?') === false) {
@@ -57,10 +45,6 @@ export default function Home() {
     } catch (error) {
       alert(error.message);
     }
-  };
-
-  const handleRetry = () => {
-    fetchData({ title_like: searchInput });
   };
 
   return (
@@ -76,7 +60,12 @@ export default function Home() {
         />
       </div>
       {isLoading && <Loading />}
-      {isError && <Error message={isError.message} onRetry={handleRetry} />}
+      {isError && (
+        <Error
+          message={isError.message}
+          onRetry={() => fetchData({ title_like: searchInput })}
+        />
+      )}
       {!isLoading && !isError && (
         <section>
           <CanvasList
