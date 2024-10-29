@@ -30,7 +30,6 @@ export default function Home() {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['canvases', filter.searchText, filter.category],
     queryFn: () => {
-      console.log('fetching');
       return getCanvases({
         title_like: filter.searchText,
         category: filter.category,
