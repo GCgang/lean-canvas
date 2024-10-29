@@ -29,9 +29,15 @@ export default function Home() {
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ['canvases', filter.searchText, filter.category],
-    queryFn: () =>
-      getCanvases({ title_like: filter.searchText, category: filter.category }),
-    initialData: [],
+    queryFn: () => {
+      console.log('fetching');
+      return getCanvases({
+        title_like: filter.searchText,
+        category: filter.category,
+      });
+    },
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 
   const { mutate: createNewCanvas, isLoading: isLoadingCreate } = useMutation({
